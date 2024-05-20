@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 # MySQL 데이터베이스 설정
 db_config = {
-    'user': 'your_db_user',
-    'password': 'your_db_password',
-    'host': 'your_db_host',
-    'database': 'your_db_name'
+    'user': 'ID',
+    'password': 'PW',
+    'host': 'IP',
+    'database': 'DB'
 }
 
 # MySQL 연결
@@ -59,3 +59,5 @@ if __name__ == '__main__':
 ## curl -X POST http://127.0.0.1:5000/add_user \
 ##     -H "Content-Type: application/json" \
 ##     -d '{"id": "user123", "phone": "010-1234-5678"}'
+## windows
+## curl -X POST http://127.0.0.1:5000/add_user -H "Content-Type: application/json" -d "{\"id\": \"user123\", \"phone\": \"01012345678\"}"
