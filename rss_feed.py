@@ -16,6 +16,8 @@ feed_urls = [
     'https://biz.heraldcorp.com/common_prog/rssdisp.php?ct=010000000000.xml',
     'https://www.mk.co.kr/rss/30000001/',
     'https://www.chosun.com/arc/outboundfeeds/rss/?outputType=xml',
+    'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114',
+    'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100727362'
     # 다른 RSS 피드 URL을 여기에 추가할 수 있습니다.
 ]
 
@@ -53,6 +55,7 @@ update_feeds()
 
 @app.route('/')
 def home():
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return render_template_string("""
 <!doctype html>
 <html lang="en">
@@ -85,7 +88,7 @@ def home():
   <body>
     <div class="container">
       <h3 class="my-4">RSS Feed</h3>
-      <div id="update-time" class="update-time"></div>
+      <div id="update-time" class="update-time">Last updated: {{ current_time }}</div>
       <div id="feed-container" class="list-group">
         {% for message in feed_messages %}
           <div class="feed-message list-group-item">{{ message|safe }}</div>
@@ -93,19 +96,7 @@ def home():
       </div>
     </div>
     <script>
-      // 페이지 로드 후 실행할 함수
       document.addEventListener("DOMContentLoaded", function(event) {
-        // 업데이트된 시간을 업데이트하는 함수
-        function updateUpdateTime() {
-          var now = new Date();
-          var formattedTime = now.toLocaleString();
-          document.getElementById('update-time').innerText = "Last updated: " + formattedTime;
-        }
-        // 1초마다 업데이트된 시간을 업데이트
-        setInterval(updateUpdateTime, 1000);
-        // 페이지 로드시 바로 한 번 업데이트
-        updateUpdateTime();
-
         // 10초마다 페이지를 새로 고침
         setInterval(function() {
           window.location.reload();
@@ -114,7 +105,7 @@ def home():
     </script>
   </body>
 </html>
-    """, feed_messages=feed_messages)
+    """, feed_messages=feed_messages, current_time=current_time)
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)
