@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>allnek.com</title>
+  <style>
+  .outer_div {
+    width:100%;
+	text-align:center;
+   }
+
+  .clock_span {
+     text-align:center;
+	 padding: 50px 100px; 
+	 background:#ffffff;
+	 font-size:200px;
+	 color:grey;
+   }
+  </style>
+  <script>
+  <!--
+  function getTime(){ //현재시각을 구하는 함수
+     var today = new Date();
+     var hours = today.getHours();  
+     var minutes = today.getMinutes();
+     var seconds = today.getSeconds();
+  
+     // 오전 오후를 정합니다.
+     if( hours >= 12 ) time = "오후";
+     else time = "오전";
+
+
+	 if( minutes < 10 ) minutes = "0" + minutes;
+     if( seconds < 10 ) seconds = "0" + seconds;
+
+     clock_span.innerHTML = hours + ":" + minutes + ":" + seconds + " " + time;
+	 setTimeout("getTime()",200);
+  }
+ 
+  //-->
+  </script>
+ </head>
+ <body onLoad=getTime();>
+   <div class="outer_div">
+     <span id="clock_span" class="clock_span"></span>
+   </div>
+ </body>
+</html>
