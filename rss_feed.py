@@ -10,6 +10,8 @@ latest_titles = {}
 
 # RSS 피드 업데이트 주기 (10초)
 UPDATE_INTERVAL = 10
+# 최대 메시지 수
+MAX_MESSAGES = 200
 
 feed_urls = [
     'https://www.yonhapnewstv.co.kr/browse/feed/',
@@ -23,6 +25,7 @@ feed_urls = [
 
 def update_feeds():
     global latest_titles
+    global feed_messages
 
     new_entries = []
 
@@ -41,9 +44,10 @@ def update_feeds():
             latest_titles[url] = set(entries)
 
     if new_entries:
-        global feed_messages
-        # 새로운 항목을 맨 앞에 추가
         feed_messages = new_entries + feed_messages
+        # 최대 메시지 수를 초과하면 오래된 메시지 삭제
+        if len(feed_messages) > MAX_MESSAGES:
+            feed_messages = feed_messages[:MAX_MESSAGES]
 
     Timer(UPDATE_INTERVAL, update_feeds).start()
 
@@ -58,11 +62,11 @@ def home():
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return render_template_string("""
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>RSS Feed</title>
+    <title>RSS 피드</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -87,8 +91,8 @@ def home():
   </head>
   <body>
     <div class="container">
-      <h3 class="my-4">RSS Feed</h3>
-      <div id="update-time" class="update-time">Last updated: {{ current_time }}</div>
+      <h3 class="my-4">RSS 피드</h3>
+      <div id="update-time" class="update-time">마지막 업데이트: {{ current_time }}</div>
       <div id="feed-container" class="list-group">
         {% for message in feed_messages %}
           <div class="feed-message list-group-item">{{ message|safe }}</div>
