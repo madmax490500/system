@@ -8,8 +8,8 @@ app = Flask(__name__)
 # 이전에 발견된 최신 제목을 저장할 딕셔너리
 latest_titles = {}
 
-# RSS 피드 업데이트 주기 (10초)
-UPDATE_INTERVAL = 10
+# RSS 피드 업데이트 주기 (초)
+UPDATE_INTERVAL = 30
 # 최대 메시지 수
 MAX_MESSAGES = 200
 
