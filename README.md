@@ -1,10 +1,8 @@
-# system
 
-## 목적
-* 이곳은 공개 가능한 코드를 저장하는 장소 입니다.
+## ✅ Latest Blog Posts
 
-## 종류
-* 대부분 파이썬으로 제작된 백앤드 관리툴입니다. 개발자에게 요청하기 소소한 내용들을 자체 제작하여 보안 사항 검토 후에 업로드 합니다.
-* CI / CD 파이프라인 스크립트및 bash 스크립트도 업로드 됩니다.
-<hr/>
-
+[2024/04/16 - AWS EC2 rocky9 에서 securecrt, xshell 로그인이 실패하고 다른 rocky linux 에서는 접속 가능한 현상](http://vitta.tistory.com/85) <br/>
+[2024/01/04 - 여러개의 docker compose 파일 사용 시 주의사항](http://vitta.tistory.com/84) <br/>
+[2023/12/14 - SSL SMTP 테스트 방법](http://vitta.tistory.com/83) <br/>
+[2023/10/31 - 몽고디비 root 권한 할당 명령](http://vitta.tistory.com/82) <br/>
+[2023/07/27 - rediscli flushdb - for문 사용](http://vitta.tistory.com/81) <br/>
