@@ -30,4 +30,3 @@ else:
     print(f"파일을 다운로드할 수 없습니다. 상태 코드: {response.status_code}")
 
 
-##왜안되는거야계속수정중
