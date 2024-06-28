@@ -28,3 +28,6 @@ if response.status_code == 200:
     print(f"파일이 성공적으로 다운로드되어 {file_path}에 저장되었습니다.")
 else:
     print(f"파일을 다운로드할 수 없습니다. 상태 코드: {response.status_code}")
+
+
+##왜안되는거야계속수정중
