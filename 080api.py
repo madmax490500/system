@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 # MySQL 데이터베이스 설정
 db_config = {
-    'user': 'ID',
-    'password': 'PW',
-    'host': 'IP',
-    'database': 'DB'
+    'user': 'root',
+    'password': 'passwd',
+    'host': '192.168.0.0',
+    'database': 'test'
 }
 
 # MySQL 연결
