@@ -15,13 +15,13 @@ ENV GIT_TOKEN=${GIT_TOKEN}
 RUN git clone https://${GIT_TOKEN}@github.com/madmax490500/system.git .
 
 # 6. 필요한 패키지 설치
-RUN pip install --no-cache-dir -r feed/requirements.txt
+RUN pip install --no-cache-dir -r /app/feed/requirements.txt
 
 # 7. Flask 환경변수 설정
-ENV FLASK_APP=feed/app.py
+ENV FLASK_APP=/app/feed/app.py
 
-# 8. 컨테이너 포트 설정
-EXPOSE 5000
+# 8. 컨테이너 포트 설정 (예: 8080)
+EXPOSE 8080
 
-# 9. 컨테이너 시작 시 실행할 명령어
-CMD ["flask", "run", "--host=0.0.0.0"]
+# 9. 컨테이너 시작 시 실행할 명령어 (포트 8080 사용)
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
