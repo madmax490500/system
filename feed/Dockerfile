@@ -15,7 +15,7 @@ ENV GIT_TOKEN=${GIT_TOKEN}
 RUN git clone https://${GIT_TOKEN}@github.com/madmax490500/system.git .
 
 # 6. 필요한 패키지 설치
-RUN pip install --no-cache-dir -r /app/feed/requirements.txt
+RUN pip install --no-cache-dir -r /app/system/feed/requirements.txt
 
 # 7. Flask 환경변수 설정
 ENV FLASK_APP=/app/feed/app.py
