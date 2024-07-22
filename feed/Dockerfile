@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # 2. 작업 디렉토리 설정
-WORKDIR /app
+WORKDIR /app/system
 
 # 3. git 및 기타 필요한 패키지 설치
 RUN apt-get update && apt-get install -y git
