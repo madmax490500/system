@@ -17,11 +17,14 @@ RUN git clone https://${GIT_TOKEN}@github.com/madmax490500/system.git .
 # 6. 필요한 패키지 설치
 RUN pip install --no-cache-dir -r /app/system/feed/requirements.txt
 
+# Gunicorn을 설치합니다
+RUN pip install gunicorn
+
 # 7. Flask 환경변수 설정
 ENV FLASK_APP=/app/system/feed/rss_feed.py
 
 # 8. 컨테이너 포트 설정 (예: 8080)
 EXPOSE 8080
 
-# 9. 컨테이너 시작 시 실행할 명령어 (포트 8080 사용)
-CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
+# Gunicorn을 사용하여 Flask 애플리케이션을 실행합니다
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "rss_feed:app"]
