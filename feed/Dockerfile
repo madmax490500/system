@@ -18,7 +18,7 @@ RUN git clone https://${GIT_TOKEN}@github.com/madmax490500/system.git .
 RUN pip install --no-cache-dir -r /app/system/feed/requirements.txt
 
 # 7. Flask 환경변수 설정
-ENV FLASK_APP=/app/system/feed/app.py
+ENV FLASK_APP=/app/system/feed/rss_feed.py
 
 # 8. 컨테이너 포트 설정 (예: 8080)
 EXPOSE 8080
