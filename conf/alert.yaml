@@ -21,28 +21,28 @@ route:
 receivers:
   - name: 'default-receiver'
     slack_configs:
-      - api_url: "https://hooks.slack.com/services/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"
+      - api_url: "https://hooks.slack.com/services/"
       - channel: '#default-alert'
         title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
         text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
         icon_emoji: ':bell:'
   - name: 'alert_test'
     slack_configs:
-      - api_url: "https://hooks.slack.com/services/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"
+      - api_url: "https://hooks.slack.com/services/"
         channel: '#ed_alerts'
         title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
         text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
         icon_emoji: ':dart:'
   - name: 'temp_alert'
     slack_configs:
-      - api_url: "https://hooks.slack.com/services/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"
+      - api_url: "https://hooks.slack.com/services/"
         channel: '#infra_alerts'
         title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
         text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
         icon_emoji: ':dart:'
   - name: 'temp_alert'
     slack_configs:
-      - api_url: "https://hooks.slack.com/services/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"
+      - api_url: "https://hooks.slack.com/services/"
         channel: '#infra_alerts'
         title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
         text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
