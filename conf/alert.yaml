@@ -1,0 +1,52 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 24h
+  receiver: 'default-receiver'
+  routes:
+    - matchers:
+        - job_name =~ "ed"
+      receiver: 'alert_test'
+    - matchers:
+        - job_name =~ "infra"
+      receiver: 'temp_alert'
+    - matchers:
+        - job_name =~ "bs"
+      receiver: 'temp_alert'
+
+receivers:
+  - name: 'default-receiver'
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/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"
+      - channel: '#default-alert'
+        title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+        text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+        icon_emoji: ':bell:'
+  - name: 'alert_test'
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/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"
+        channel: '#ed_alerts'
+        title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+        text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+        icon_emoji: ':dart:'
+  - name: 'temp_alert'
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/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"
+        channel: '#infra_alerts'
+        title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+        text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+        icon_emoji: ':dart:'
+  - name: 'temp_alert'
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/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"
+        channel: '#infra_alerts'
+        title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+        text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+        icon_emoji: ':bell:'
+
+templates:
+  - /opt/prometheus/alertmanager/notifications.tmpl
