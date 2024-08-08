@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  app:
+   image: ${IMAGE}:${TAG}
+   container_name: ${CNAME}
+   ports:
+     - ${PORT}:10008
+       #     - 21:21
+   environment:
+      TZ: "Asia/Seoul"
+   volumes:
+     - /home/rocky/logs/pinocchio:/go/src/app-name/runtime/logs #golang사용 시
+     - /jsondata:/jsondata  #NFS 로 로그 저장 admin 에서 참조
