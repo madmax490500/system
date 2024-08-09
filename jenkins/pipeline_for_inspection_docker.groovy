@@ -54,6 +54,7 @@ pipeline {
             parallel {
                 stage('radmin-image') {
                     steps {      
+                        // 빌드 시 젠킨스 워크스페이스가 일치하는지 꼭 확인 할것.
                         dir("$JENKINS_HOME/workspace/projectr-docker-inspection/Build/ServerPublish/publish/radmin/") {
                             sh 'docker build --platform linux/amd64 -t ${PROJECT_NAME}-${DEPLORY_NAME}-radmin .'
                         }
