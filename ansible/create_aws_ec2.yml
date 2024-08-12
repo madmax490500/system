@@ -1,0 +1,61 @@
+---
+- name: "project_1111"
+  hosts: localhost
+  connection: local
+  become: yes
+
+## 환경변수에서 AWS_ACCESS_KEY를 설정한 후에 사용하세요.
+  vars:
+    region: ap-northeast-2
+    key_name: ##키이름
+    security_group_id: ##security_group 선언
+    instance_type: ##인스턴스타입선언
+    ami_id: ## 이미지선언
+    vpc_subnet_id: ## subnet ID
+    instance_tags:
+      Name: ansible-make
+      Creater: Ansible
+    instance_count: 10  # 생성할 인스턴스 수
+
+  tasks:
+    - name: "host_check"
+      shell: "hostname"
+      register: "output"
+    - debug: var=output.stdout_lines
+
+    - name: install pip
+      yum:
+        name:
+          - python-pip
+          - python3-pip
+        state: present
+      register: pip_result
+    - debug: var=pip_result
+
+    - name: install boto
+      pip:
+        name:
+          - boto
+          - boto3
+      register: boto_result
+    - debug: var=boto_result
+
+    - name: create an game
+      ec2:
+        region: "{{ region }}"
+        key_name: "{{ key_name }}"
+        group_id: "{{ security_group_id }}"
+        instance_type: "{{ instance_type }}"
+        image: "{{ ami_id }}"
+        wait: yes
+        wait_timeout: 60
+        instance_tags: "{{ instance_tags }}"
+        vpc_subnet_id: "{{ vpc_subnet_id }}"
+        assign_public_ip: False
+        user_data: |
+          #!/bin/sh
+          echo input_user_data
+      register: aws_result
+      loop: "{{range(1, instance_count + 1) | list}}" ## 반복해서 서버 생성 
+    - debug:
+        var: aws_result
