@@ -1,0 +1,24 @@
+- name: EC2 인스턴스 타입 변경
+  hosts: all
+  gather_facts: no
+  vars:
+    region: ap-northeast-2
+    instance_id: i-09bdbb5fcd607d549
+    new_instance_type: t2.micro
+
+  tasks:
+    - name: 인스턴스 중지
+      ec2_instance:
+        region: "{{ region }}"
+        instance_ids: "{{ instance_id }}"
+        state: stopped
+    - name: 인스턴스 타입 변경
+      ec2_instance:
+        region: "{{ region }}"
+        instance_ids: "{{ instance_id }}"
+        instance_type: "{{ new_instance_type }}"
+    - name: 인스턴스 시작
+      ec2_instance:
+        region: "{{ region }}"
+        instance_ids: "{{ instance_id }}"
+        state: started
