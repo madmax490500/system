@@ -1,0 +1,8 @@
+# hosts 파일 (inventory 파일)
+[webservers]
+i-12345678
+i-23456789
+
+[databases]
+db1
+db2
