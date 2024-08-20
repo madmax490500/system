@@ -1,0 +1,88 @@
+---
+- name: Install and configure SNMP, Prometheus Node Exporter, and Telegraf on Centos
+  hosts: rocky-server-farm
+  become: yes  # root 권한으로 실행
+  tasks:
+
+    - name: Install SNMP and SNMP utilities
+      yum:
+        name:
+          - net-snmp
+          - net-snmp-utils
+        state: present
+
+    - name: Backup existing snmpd.conf if exists
+      copy:
+        src: /etc/snmp/snmpd.conf
+        dest: /etc/snmp/snmpd.conf.bak
+        remote_src: yes
+      ignore_errors: yes
+
+    - name: Configure snmpd.conf
+      template:
+        src: templates/snmpd.conf.j2  # snmp 템플릿 파일의 경로와 이름
+        dest: /etc/snmp/snmpd.conf
+        mode: '0644'
+
+    - name: Ensure SNMP service is enabled and started
+      systemd:
+        name: snmpd
+        enabled: yes
+        state: restarted
+
+    - name: Download Prometheus Node Exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+        dest: /tmp/node_exporter.tar.gz
+
+    - name: Extract Node Exporter
+      ansible.builtin.unarchive:
+        src: /tmp/node_exporter.tar.gz
+        dest: /usr/local/bin/
+        remote_src: yes
+        extra_opts: ['--strip-components=1']
+
+    - name: Create Node Exporter systemd service file
+      copy:
+        dest: /etc/systemd/system/node_exporter.service
+        content: |
+          [Unit]
+          Description=Prometheus Node Exporter
+          After=network.target
+
+          [Service]
+          User=nobody
+          ExecStart=/usr/local/bin/node_exporter
+
+          [Install]
+          WantedBy=default.target
+      mode: '0644'
+
+    - name: Reload systemd to recognize Node Exporter service
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start Node Exporter service
+      systemd:
+        name: node_exporter
+        enabled: yes
+        state: started
+
+    - name: Install Telegraf
+      yum:
+        name: telegraf
+        state: present
+
+    - name: Configure telegraf.conf  ##telegraf.d 나 conf 파일 대량 수정이 필요하면 snmpd 방식으로 변경 할것
+      lineinfile:
+        path: /etc/telegraf/telegraf.conf
+        regexp: '^  urls = '
+        line: '  urls = ["http://test.local:8086"]'
+        insertafter: '\[\[outputs.influxdb\]\]'
+        state: present
+
+    - name: Ensure Telegraf service is enabled and started
+      systemd:
+        name: telegraf
+        enabled: yes
+        state: restarted

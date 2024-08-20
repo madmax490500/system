@@ -1,0 +1,21 @@
+# snmpd.conf template
+# GAMEPUB ACL
+#       sec.name    source          community
+com2sec local           localhost       secu
+com2sec icinga2         1.1.1.1 secu
+
+#       sec.model                   sec.name
+group   MyRWGroup       v1              local
+group   MyRWGroup       v2c             local
+group   MyRWGroup       usm             local
+group   MyROGroup       v2c             icinga2
+
+#                       incl/excl       subtree mask
+view all        included        .1              80
+
+#                context sec.model sec.level match  read   write  notif
+access MyROGroup ""        any       noauth    exact  all    none   none
+access MyRWGroup ""        any       noauth    exact  all    all    none
+
+syslocation Cloud Center
+syscontact System Team sec@company.co.kr
