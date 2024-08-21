@@ -1,0 +1,49 @@
+- name: Update security group rules while keeping existing rules
+  hosts: localhost
+  become: yes
+  gather_facts: no
+
+## 기존 시큐리티 그룹을에서 지정된 rejectattr 만 제거하고 나머지는 다시 list 로 넣습니다. 
+## 기존 룰셋이 사라졌다 들어가는 점 잊지 마세요.
+
+  tasks:
+    - name: Get current security group rules
+      amazon.aws.ec2_security_group_info:
+        filters:
+          group-name: my-security-group
+          vpc-id: vpc-38589153
+      register: sg_info
+
+    - name: Set new rules for the security group
+      set_fact:
+        new_ingress_rules: >
+          {{
+            sg_info.security_groups[0].ip_permissions | rejectattr('from_port', '==', 22) | list
+          }}
+        new_egress_rules: "{{ sg_info.security_groups[0].ip_permissions_egress }}"
+
+    - name: Add new ingress rule (e.g., allow HTTP)
+      set_fact:
+        updated_ingress_rules: >
+          {{
+            new_ingress_rules + [
+              {
+                'ip_protocol': 'tcp',
+                'from_port': 80,
+                'to_port': 80,
+                'ip_ranges': [{'cidr_ip': '0.0.0.0/0'}]
+              }
+            ]
+          }}
+
+    - name: Update security group with new rules
+      amazon.aws.ec2_security_group:
+        name: my-security-group
+        vpc_id: "vpc-38589153"
+        rules: "{{ updated_ingress_rules }}"
+        rules_egress: "{{ new_egress_rules }}"
+      register: updated_sg
+
+    - name: Debug updated security group
+      debug:
+        var: updated_sg
