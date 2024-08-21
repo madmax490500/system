@@ -18,4 +18,5 @@
 
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=madmax490500)]
 
-https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white
+![](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)
+
