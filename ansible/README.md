@@ -1,5 +1,6 @@
 ## 목적
 * Ansible 을 이용하여 초기 세팅
+* AWS EC2 상태변경 (점검, 일괄 stop, 재시작)
 * 대량의 conf 변경 (nginx vhost)
 * Ansible playbook 참고 자료
 
