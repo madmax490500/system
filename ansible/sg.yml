@@ -1,0 +1,27 @@
+- name: Create a security group with both inbound and outbound rules
+  hosts: localhost
+  become: yes
+  gather_facts: no
+
+## amazon.aws.ec2_security_group 은 변경사항이 있으면 기존 룰셋을 제거한 후 재구성합니다.
+## 기존 규칙이 사라지지 않도록 각별한 주의 바랍니다.
+
+  tasks:
+    - name: Create a security group
+      amazon.aws.ec2_security_group:
+        name: my-security-group
+        description: My security group
+        vpc_id: "vpc-38589153"
+        rules:
+          - proto: tcp
+            from_port: 2233
+            to_port: 2233
+            cidr_ip: "0.0.0.0/0"  # Inbound rule: Allow SSH from anywhere
+        rules_egress:
+          - proto: all
+            cidr_ip: "0.0.0.0/0"  # Outbound rule: Allow all outbound traffic
+      register: security_group
+
+    - name: Debug security group creation result
+      debug:
+        var: security_group
