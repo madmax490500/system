@@ -1,0 +1,36 @@
+---
+- name: Modify RDS instance type
+  hosts: localhost
+  gather_facts: no
+  vars:
+    aws_region: "ap-northeast-2"  # 사용할 AWS 리전으로 변경
+    db_instance_identifier: "deleteme"  # 변경할 RDS 인스턴스의 식별자
+    new_instance_type: "db.t3.small"  # 새 인스턴스 유형
+
+  tasks:
+    - name: Modify RDS instance type
+      amazon.aws.rds_instance:
+        db_instance_identifier: "{{ db_instance_identifier }}"
+        instance_type: "{{ new_instance_type }}"
+        region: "{{ aws_region }}"
+      register: rds_modify_result
+
+    - name: Wait until the RDS instance is available after modification
+      amazon.aws.rds_instance_info:
+        db_instance_identifier: "{{ db_instance_identifier }}"
+        region: "{{ aws_region }}"
+      register: rds_info
+      until: rds_info.instances[0].db_instance_status == "available"
+      retries: 10
+      delay: 60
+
+    - name: Print the new instance type
+      debug:
+        msg: "RDS instance type has been changed to: {{ rds_info.instances[0].db_instance_class }}"
+
+    - name: Validate the instance type change
+      assert:
+        that:
+          - rds_info.instances[0].db_instance_class == new_instance_type
+        fail_msg: "RDS instance type was not changed successfully."
+        success_msg: "RDS instance type was changed successfully to {{ new_instance_type }}."
