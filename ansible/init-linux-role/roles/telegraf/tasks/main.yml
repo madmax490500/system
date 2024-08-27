@@ -1,0 +1,19 @@
+# roles/telegraf/tasks/main.yml
+- name: Install Telegraf
+  dnf:
+    name: telegraf
+    state: present
+
+- name: Configure telegraf.conf
+  lineinfile:
+    path: /etc/telegraf/telegraf.conf
+    regexp: '^  urls = '
+    line: '  urls = ["http://test.local:8086"]'
+    insertafter: '\[\[outputs.influxdb\]\]'
+    state: present
+
+- name: Ensure Telegraf service is enabled and started
+  systemd:
+    name: telegraf
+    enabled: yes
+    state: restarted

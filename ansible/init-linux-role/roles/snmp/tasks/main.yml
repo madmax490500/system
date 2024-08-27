@@ -1,0 +1,26 @@
+# roles/snmp/tasks/main.yml
+- name: Install SNMP and SNMP utilities
+  dnf:
+    name:
+      - net-snmp
+      - net-snmp-utils
+    state: present
+
+- name: Backup existing snmpd.conf if exists
+  copy:
+    src: /etc/snmp/snmpd.conf
+    dest: /etc/snmp/snmpd.conf.bak
+    remote_src: yes
+  ignore_errors: yes
+
+- name: Configure snmpd.conf
+  template:
+    src: snmpd.conf.j2
+    dest: /etc/snmp/snmpd.conf
+    mode: '0644'
+
+- name: Ensure SNMP service is enabled and started
+  systemd:
+    name: snmpd
+    enabled: yes
+    state: restarted

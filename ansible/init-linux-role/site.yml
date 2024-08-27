@@ -1,0 +1,8 @@
+# site.yml
+- name: Install and configure SNMP, Prometheus Node Exporter, and Telegraf on Rocky9
+  hosts: all
+  become: yes
+  roles:
+    - snmp
+    - node_exporter
+    - telegraf
