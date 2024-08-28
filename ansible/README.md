@@ -6,9 +6,10 @@
 
 
 ## 사용방법
-ansible-playbook -i 인벤토리 role-플레이북.yml
+* ansible-playbook -i 인벤토리 role-플레이북.yml
+* 다중변수는 -e 를 사용하고 스페이스로 구분합니다.
 
-## 고민점
-terraform 과 어떻게 유기적으로 붙일 수 있을지 고민이 필요
+## 개선사항
+* terraform 과 어떻게 유기적으로 붙일 수 있을지 고민이 필요
 <hr/>
 
