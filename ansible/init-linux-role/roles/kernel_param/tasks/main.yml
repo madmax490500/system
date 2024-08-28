@@ -1,0 +1,34 @@
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
+- name: Set file descriptor limits for users
+  lineinfile:
+    dest: /etc/security/limits.conf
+    regexp: '^{{ item }}.*nofile'
+    line: '{{ item }} hard nofile {{ open_file_limit }}'
+    state: present
+  loop: "{{ limit_user }}"
+
+- name: Persist sysctl settings
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_set: yes
+    reload: yes
+  with_items:
+    - { name: 'fs.file-max', value: '{{ open_file_limit }}' }
+
+- name: Apply sysctl changes
+  command: sysctl -p
+  when: sysctl_reload|default(true)
+
+- name: Set ulimit for current session
+  shell: |
+    echo "* hard nofile {{ open_file_limit }}" >> /etc/security/limits.conf
+    echo "* soft nofile {{ open_file_limit }}" >> /etc/security/limits.conf
+    echo "root hard nofile {{ open_file_limit }}" >> /etc/security/limits.conf
+    echo "root soft nofile {{ open_file_limit }}" >> /etc/security/limits.conf
+  args:
+    executable: /bin/bash
