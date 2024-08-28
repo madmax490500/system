@@ -10,6 +10,7 @@
 
 ## 사용법 (다중변수는 스페이스로 구분합니다.)
 ansible-playbook main.yml -e "open_file_limit=숫자 limit_user=*"
+변수를 파일로 사용할 경우 @ 를 사용 하세요
 
 <hr/>
 
