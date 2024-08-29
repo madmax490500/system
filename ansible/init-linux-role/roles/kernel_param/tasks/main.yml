@@ -24,11 +24,31 @@
   command: sysctl -p
   when: sysctl_reload|default(true)
 
-- name: Set ulimit for current session
-  shell: |
-    echo "* hard nofile {{ open_file_limit }}" >> /etc/security/limits.conf
-    echo "* soft nofile {{ open_file_limit }}" >> /etc/security/limits.conf
-    echo "root hard nofile {{ open_file_limit }}" >> /etc/security/limits.conf
-    echo "root soft nofile {{ open_file_limit }}" >> /etc/security/limits.conf
-  args:
-    executable: /bin/bash
+##멱등성을 위해 기존 shell 제거하고 lineinfile 로 대체
+- name: Set ulimit for all users (hard)
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "* hard nofile {{ open_file_limit }}"
+    state: present
+    create: yes
+
+- name: Set ulimit for all users (soft)
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "* soft nofile {{ open_file_limit }}"
+    state: present
+    create: yes
+
+- name: Set ulimit for root user (hard)
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "root hard nofile {{ open_file_limit }}"
+    state: present
+    create: yes
+
+- name: Set ulimit for root user (soft)
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "root soft nofile {{ open_file_limit }}"
+    state: present
+    create: yes
