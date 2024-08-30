@@ -6,7 +6,7 @@ resource "tls_private_key" "pk" {
 
 # private 키를 가지고 keypair 파일 생성.
 resource "aws_key_pair" "kp" {
-  key_name   = "test_hyeob_keypair"
+  key_name   = "deleteme_keypair"
   public_key = tls_private_key.pk.public_key_openssh
 }
 
