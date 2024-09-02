@@ -1,3 +1,4 @@
+## Example try execpt
 try:
     data = open('missing.txt')
     print(data.readline(), end='')
