@@ -1,0 +1,42 @@
+---
+- name: Find and move files from /data3 to /data4
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Find files in /data3 using find command
+      command: find /data3 -type f -name "*.conf"
+      register: found_files
+
+    - name: Gather file stats for files in /data3
+      ansible.builtin.stat:
+        path: "{{ item }}"
+        checksum_algorithm: sha256
+      loop: "{{ found_files.stdout_lines }}"
+      register: data3_checksums
+
+    - name: Gather file stats for files in /data4 (if they exist)
+      ansible.builtin.stat:
+        path: "/data4/{{ item | basename }}"
+        checksum_algorithm: sha256
+      loop: "{{ found_files.stdout_lines }}"
+      ignore_errors: yes
+      register: data4_checksums
+
+    - name: Ensure the 'data4_checksums' result list is correctly sized
+      set_fact:
+        data4_checksums_fixed: "{{ data4_checksums.results | default([]) }}"
+
+    - name: Move files if checksums do not match or file does not exist in /data4
+      command: mv {{ item }} /data4/
+      loop: "{{ found_files.stdout_lines }}"
+      when: >
+        (not data4_checksums_fixed[item_loop_index].stat.exists or
+        data3_checksums.results[item_loop_index].stat.checksum !=
+        data4_checksums_fixed[item_loop_index].stat.checksum)
+      loop_control:
+        index_var: item_loop_index
+
+    - name: Display moved files
+      debug:
+        msg: "Moved file: {{ item }}"
+      loop: "{{ found_files.stdout_lines }}"
